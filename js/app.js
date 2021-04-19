@@ -4,7 +4,6 @@ let left = document.getElementById('firstImg');
 let middle = document.getElementById('secondImg');
 let right = document.getElementById('thirdImg');
 let container=document.getElementById('container');
-let button = document.getElementById('button');
 let count = 0;
 let maxCount = 25;
 let leftIndex ;
@@ -93,17 +92,33 @@ function clickHandle(event) {
   }else{
 
     container.removeEventListener('click',clickHandle);
-    button.addEventListener('click',resault);
+    let ul=document.getElementById('list');
+    for (let i = 0; i < allImg.length; i++) {
+      let li = document.createElement('li');
+      ul.appendChild(li);
+      li.textContent=`${allImg[i].name} has been shown ${allImg[i].itemShowNum} , and it has ${allImg[i].vote} votes`;
+    }
   }
 }
 
 
-function resault() {
-  let ul=document.getElementById('list');
-  for (let i = 0; i < allImg.length; i++) {
-    let li = document.createElement('li');
-    ul.appendChild(li);
-    li.textContent=`${allImg[i].name} has been shown ${allImg[i].itemShowNum} , and it has ${allImg[i].vote} votes`;
-  }
-  button.removeEventListener('click',resault);
-}
+
+
+let ctx = document.getElementById('myChart');
+let myChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    datasets: [{
+      label: '# of Votes',
+      data: [12, 19, 3, 5, 2, 3],
+      backgroundColor: [
+        'rgba(54, 162, 235, 0.2)',
+      ],
+      borderColor: [
+        'rgba(54, 162, 235, 1)',
+      ],
+      borderWidth: 1
+    }]
+  },
+});
