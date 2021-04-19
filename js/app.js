@@ -4,7 +4,6 @@ let left = document.getElementById('firstImg');
 let middle = document.getElementById('secondImg');
 let right = document.getElementById('thirdImg');
 let container=document.getElementById('container');
-let button = document.getElementById('button');
 let count = 0;
 let maxCount = 25;
 let leftIndex ;
@@ -52,15 +51,32 @@ function generateIndex() {
   return Math.floor(Math.random()*allImg.length);
 }
 
+
+
+let arrIndex=[];
+let check1;
+let check2;
+let check3;
+
 function renderImg() {
   leftIndex=generateIndex();
   middleIndex=generateIndex();
   rightIndex=generateIndex();
 
-  while (leftIndex === rightIndex || leftIndex === middleIndex || rightIndex === middleIndex) {
+  check1=arrIndex.includes(leftIndex);
+  check2=arrIndex.includes(rightIndex);
+  check3=arrIndex.includes(middleIndex);
+
+  while (leftIndex === rightIndex || leftIndex === middleIndex || rightIndex === middleIndex || check1 || check2 || check3) {
+    leftIndex=generateIndex();
     rightIndex= generateIndex();
     middleIndex= generateIndex();
+
+    check1=arrIndex.includes(leftIndex);
+    check2=arrIndex.includes(rightIndex);
+    check3=arrIndex.includes(middleIndex);
   }
+
   allImg[leftIndex].itemShowNum+=1;
   allImg[middleIndex].itemShowNum+=1;
   allImg[rightIndex].itemShowNum+=1;
@@ -69,11 +85,16 @@ function renderImg() {
   middle.setAttribute('src',allImg[middleIndex].path);
   right.setAttribute('src',allImg[rightIndex].path);
 
+  arrIndex=[leftIndex,rightIndex,middleIndex];
+  console.log(arrIndex);
 }
 renderImg();
 
 
 
+let arrNames=[];
+let arrVotes=[];
+let arrShown=[];
 
 container.addEventListener('click',clickHandle);
 
@@ -88,22 +109,54 @@ function clickHandle(event) {
     }else{
       allImg[rightIndex].vote++;
     }
+
     renderImg();
 
   }else{
 
     container.removeEventListener('click',clickHandle);
-    button.addEventListener('click',resault);
+    let ul=document.getElementById('list');
+    for (let i = 0; i < allImg.length; i++) {
+      let li = document.createElement('li');
+      ul.appendChild(li);
+      li.textContent=`${allImg[i].name} has been shown ${allImg[i].itemShowNum} , and it has ${allImg[i].vote} votes`;
+      arrNames.push(allImg[i].name);
+      arrVotes.push(allImg[i].vote);
+      arrShown.push(allImg[i].itemShowNum);
+    }
+    chartRender();
   }
 }
 
 
-function resault() {
-  let ul=document.getElementById('list');
-  for (let i = 0; i < allImg.length; i++) {
-    let li = document.createElement('li');
-    ul.appendChild(li);
-    li.textContent=`${allImg[i].name} has been shown ${allImg[i].itemShowNum} , and it has ${allImg[i].vote} votes`;
-  }
-  button.removeEventListener('click',resault);
+function chartRender() {
+  let ctx = document.getElementById('myChart');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: arrNames,
+      datasets: [{
+        label: 'votes',
+        data: arrVotes,
+        backgroundColor: [
+          'rgba(54, 162, 235, 0.2)',
+        ],
+        borderColor: [
+          'rgba(54, 162, 235, 1)',
+        ],
+        borderWidth: 1
+      },
+      {
+        label: 'shown times',
+        data: arrShown,
+        backgroundColor: [
+          'rgba(105,105,105,0.2)',
+        ],
+        borderColor: [
+          'rgba(105,105,105,1)',
+        ],
+        borderWidth: 1
+      }]
+    },
+  });
 }
