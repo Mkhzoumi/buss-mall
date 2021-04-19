@@ -3,6 +3,8 @@
 let left = document.getElementById('firstImg');
 let middle = document.getElementById('secondImg');
 let right = document.getElementById('thirdImg');
+let container=document.getElementById('container');
+let button = document.getElementById('button');
 let count = 0;
 let maxCount = 25;
 let leftIndex ;
@@ -73,9 +75,7 @@ renderImg();
 
 
 
-left.addEventListener('click',clickHandle);
-middle.addEventListener('click',clickHandle);
-right.addEventListener('click',clickHandle);
+container.addEventListener('click',clickHandle);
 
 function clickHandle(event) {
   count++;
@@ -90,15 +90,20 @@ function clickHandle(event) {
     }
     renderImg();
 
-  }else{let ul=document.getElementById('list');
-    for (let i = 0; i < allImg.length; i++) {
-      let li = document.createElement('li');
-      ul.appendChild(li);
-      li.textContent=`${allImg[i].name} has been shown ${allImg[i].itemShowNum} , and it has ${allImg[i].vote} votes`;
-    }
-    left.removeEventListener('click',clickHandle);
-    middle.removeEventListener('click',clickHandle);
-    right.removeEventListener('click',clickHandle);
+  }else{
 
+    container.removeEventListener('click',clickHandle);
+    button.addEventListener('click',resault);
   }
+}
+
+
+function resault() {
+  let ul=document.getElementById('list');
+  for (let i = 0; i < allImg.length; i++) {
+    let li = document.createElement('li');
+    ul.appendChild(li);
+    li.textContent=`${allImg[i].name} has been shown ${allImg[i].itemShowNum} , and it has ${allImg[i].vote} votes`;
+  }
+  button.removeEventListener('click',resault);
 }
