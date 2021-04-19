@@ -51,15 +51,32 @@ function generateIndex() {
   return Math.floor(Math.random()*allImg.length);
 }
 
+
+
+let arrIndex=[];
+let check1;
+let check2;
+let check3;
+
 function renderImg() {
   leftIndex=generateIndex();
   middleIndex=generateIndex();
   rightIndex=generateIndex();
 
-  while (leftIndex === rightIndex || leftIndex === middleIndex || rightIndex === middleIndex) {
+  check1=arrIndex.includes(leftIndex);
+  check2=arrIndex.includes(rightIndex);
+  check3=arrIndex.includes(middleIndex);
+
+  while (leftIndex === rightIndex || leftIndex === middleIndex || rightIndex === middleIndex || check1 || check2 || check3) {
+    leftIndex=generateIndex();
     rightIndex= generateIndex();
     middleIndex= generateIndex();
+
+    check1=arrIndex.includes(leftIndex);
+    check2=arrIndex.includes(rightIndex);
+    check3=arrIndex.includes(middleIndex);
   }
+
   allImg[leftIndex].itemShowNum+=1;
   allImg[middleIndex].itemShowNum+=1;
   allImg[rightIndex].itemShowNum+=1;
@@ -68,11 +85,16 @@ function renderImg() {
   middle.setAttribute('src',allImg[middleIndex].path);
   right.setAttribute('src',allImg[rightIndex].path);
 
+  arrIndex=[leftIndex,rightIndex,middleIndex];
+  console.log(arrIndex);
 }
 renderImg();
 
 
 
+let arrNames=[];
+let arrVotes=[];
+let arrShown=[];
 
 container.addEventListener('click',clickHandle);
 
@@ -87,6 +109,7 @@ function clickHandle(event) {
     }else{
       allImg[rightIndex].vote++;
     }
+
     renderImg();
 
   }else{
@@ -97,28 +120,43 @@ function clickHandle(event) {
       let li = document.createElement('li');
       ul.appendChild(li);
       li.textContent=`${allImg[i].name} has been shown ${allImg[i].itemShowNum} , and it has ${allImg[i].vote} votes`;
+      arrNames.push(allImg[i].name);
+      arrVotes.push(allImg[i].vote);
+      arrShown.push(allImg[i].itemShowNum);
     }
+    chartRender();
   }
 }
 
 
-
-
-let ctx = document.getElementById('myChart');
-let myChart = new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-    datasets: [{
-      label: '# of Votes',
-      data: [12, 19, 3, 5, 2, 3],
-      backgroundColor: [
-        'rgba(54, 162, 235, 0.2)',
-      ],
-      borderColor: [
-        'rgba(54, 162, 235, 1)',
-      ],
-      borderWidth: 1
-    }]
-  },
-});
+function chartRender() {
+  let ctx = document.getElementById('myChart');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: arrNames,
+      datasets: [{
+        label: 'votes',
+        data: arrVotes,
+        backgroundColor: [
+          'rgba(54, 162, 235, 0.2)',
+        ],
+        borderColor: [
+          'rgba(54, 162, 235, 1)',
+        ],
+        borderWidth: 1
+      },
+      {
+        label: 'shown times',
+        data: arrShown,
+        backgroundColor: [
+          'rgba(105,105,105,0.2)',
+        ],
+        borderColor: [
+          'rgba(105,105,105,1)',
+        ],
+        borderWidth: 1
+      }]
+    },
+  });
+}
