@@ -5,11 +5,13 @@ let middle = document.getElementById('secondImg');
 let right = document.getElementById('thirdImg');
 let container=document.getElementById('container');
 let count = 0;
-let maxCount = 25;
+let maxCount = 10;
 let leftIndex ;
 let middleIndex ;
 let rightIndex ;
 let allImg=[];
+
+
 
 function Products (prodName , photoPath){
   this.name = prodName;
@@ -58,6 +60,7 @@ let check1;
 let check2;
 let check3;
 
+
 function renderImg() {
   leftIndex=generateIndex();
   middleIndex=generateIndex();
@@ -86,7 +89,6 @@ function renderImg() {
   right.setAttribute('src',allImg[rightIndex].path);
 
   arrIndex=[leftIndex,rightIndex,middleIndex];
-  console.log(arrIndex);
 }
 renderImg();
 
@@ -98,9 +100,10 @@ let arrShown=[];
 
 container.addEventListener('click',clickHandle);
 
+gettingDataFromLs();
+
 function clickHandle(event) {
   count++;
-
   if (maxCount> count) {
     if(event.target.id === 'firstImg'){
       allImg[leftIndex].vote++;
@@ -110,7 +113,10 @@ function clickHandle(event) {
       allImg[rightIndex].vote++;
     }
 
+    lsData();
+
     renderImg();
+
 
   }else{
 
@@ -159,4 +165,23 @@ function chartRender() {
       }]
     },
   });
+}
+
+
+
+function lsData() {
+  let data=JSON.stringify(allImg);
+  localStorage.setItem('product',data);
+
+}
+
+
+function gettingDataFromLs() {
+
+  let backData=JSON.parse(localStorage.getItem('product'));
+
+  if (backData) {
+    allImg=backData;
+  }
+
 }
