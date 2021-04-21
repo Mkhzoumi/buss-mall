@@ -5,7 +5,7 @@ let middle = document.getElementById('secondImg');
 let right = document.getElementById('thirdImg');
 let container=document.getElementById('container');
 let count = 0;
-let maxCount = 10;
+let maxCount = 25;
 let leftIndex ;
 let middleIndex ;
 let rightIndex ;
